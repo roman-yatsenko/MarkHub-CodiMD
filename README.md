@@ -1,4 +1,5 @@
-MarkHub -- markdown hub ифіув on CodiMD and LiaScript
+MarkHub - markdown hub based on CodiMD and LiaScript
+===
 
 CodiMD
 
