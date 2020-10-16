@@ -1,16 +1,6 @@
 MarkHub - markdown hub based on CodiMD and LiaScript
 ===
 
-CodiMD
-
-[![build status][travis-image]][travis-url]
-[![version][github-version-badge]][github-release-page]
-[![Gitter][gitter-image]][gitter-url]
-[![POEditor][poeditor-image]][poeditor-url]
-
-CodiMD lets you collaborate in real-time with markdown.
-Built on [HackMD](https://hackmd.io) source code, CodiMD lets you host and control your team's content with speed and ease.
-
 ![screenshot](https://raw.githubusercontent.com/hackmdio/codimd/develop/public/screenshot.png)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
