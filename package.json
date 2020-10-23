@@ -1,16 +1,16 @@
 {
-  "name": "codimd",
-  "version": "2.1.0",
-  "description": "Realtime collaborative markdown notes on all platforms.",
+  "name": "markhub",
+  "version": "0.1.0",
+  "description": "Realtime collaborative markdown content on all platforms.",
   "keywords": [
     "Collaborative",
     "Markdown",
-    "Notes"
+    "Content"
   ],
-  "bugs": "https://github.com/hackmdio/codimd/issues",
+  "bugs": "https://github.com/roman-yatsenko/MarkHub/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hackmdio/codimd.git"
+    "url": "https://github.com/roman-yatsenko/MarkHub.git"
   },
   "license": "AGPL-3.0",
   "main": "app.js",

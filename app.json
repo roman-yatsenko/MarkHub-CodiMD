@@ -1,13 +1,13 @@
 {
-    "name": "CodiMD",
-    "description": "Realtime collaborative markdown notes on all platforms",
+    "name": "MarkHub",
+    "description": "Realtime collaborative markdown content on all platforms",
     "keywords": [
         "Collaborative",
         "Markdown",
         "Notes"
     ],
-    "website": "https://github.com/hackmdio/codimd",
-    "repository": "https://github.com/hackmdio/codimd",
+    "website": "https://markhub.io",
+    "repository": "https://github.com/roman-yatsenko/MarkHub",
     "logo": "https://github.com/hackmdio/codimd/raw/master/public/codimd-icon-1024.png",
     "success_url": "/",
     "env": {

@@ -131,9 +131,9 @@ function getTitle (view) {
 export function renderTitle (view) {
   let title = getTitle(view)
   if (title) {
-    title += ' - CodiMD'
+    title += ' - MarkHub'
   } else {
-    title = 'CodiMD - Collaborative markdown notes'
+    title = 'MarkHub - Collaborative markdown content'
   }
   return title
 }

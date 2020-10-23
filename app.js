@@ -299,7 +299,7 @@ process.on('uncaughtException', function (err) {
 
 // install exit handler
 function handleTermSignals () {
-  logger.info('CodiMD has been killed by signal, try to exit gracefully...')
+  logger.info('MarkHub has been killed by signal, try to exit gracefully...')
   realtime.maintenance = true
   realtime.terminate()
   // disconnect all socket.io clients

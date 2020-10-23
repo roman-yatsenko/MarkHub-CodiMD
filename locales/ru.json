@@ -118,5 +118,6 @@
 	"Register": "Register",
 	"Export with pandoc": "Export with pandoc",
 	"Select output format": "Select output format",
-	"You have no rights to edit this note": "У вас нет прав редактировать эту заметку"
+	"You have no rights to edit this note": "У вас нет прав редактировать эту заметку",
+	"Collaborative markdown content": "Collaborative markdown content"
 }
