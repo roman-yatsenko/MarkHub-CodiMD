@@ -1,4 +1,4 @@
 
 ---
 
-Створено в [Кузні контенту](https://content.hneu.edu.ua)
+Створено в [MarkHub](https://markhub.io)
