@@ -321,6 +321,21 @@ defaultTextHeight = parseInt($('.CodeMirror').css('line-height'))
 //  initalize ui reference
 const ui = getUIElements()
 
+// controls to need disabled when allowVisibleSource run
+// this prevent user to access source code
+const modeChangeControls = {
+  edit: ui.toolbar.edit,
+  both: ui.toolbar.both
+}
+const exportImportControls = {
+  revision: ui.toolbar.extra.revision,
+  markdown: ui.toolbar.download.markdown,
+  rawhtml: ui.toolbar.download.rawhtml,
+  gist: ui.toolbar.import.gist,
+  clipboard: ui.toolbar.import.clipboard,
+  pandoc: ui.toolbar.download.pandoc
+}
+
 // page actions
 var opts = {
   lines: 11, // The number of lines to draw
@@ -425,7 +440,7 @@ Visibility.change(function (e, state) {
 
 // when page ready
 $(document).ready(function () {
-  if (ui.toolbar.edit.data('blockSource')) { replaceUrl(window.location.href) }
+  if (ui.toolbar.edit.data('blockSource')) { replaceUrlToViewMode(window.location.href) }
 
   idle.checkAway()
   checkResponsive()
@@ -472,7 +487,6 @@ $(document).ready(function () {
   $('[data-toggle="tooltip"]').tooltip()
   // shortcuts
   // allow on all tags
-  
   key.filter = function (e) { return true }
   key('ctrl+alt+e', function (e) {
     if (blockSourceView) return
@@ -506,13 +520,14 @@ $(window).on('error', function () {
   // setNeedRefresh();
 })
 
-function checkParametr (isLogin, permission) {
+function checkParameter (isLogin, permission) {
   if (typeof isLogin !== 'boolean' || !permission) {
-    throw new Error('one or more parametr is incorrect')
-  } else return allowVisibleSource(isLogin, permission)
+    throw new Error('one or more parameter is incorrect')
+  }
+  return allowVisibleSource(isLogin, permission)
 }
 
-function replaceUrl (url) {
+function replaceUrlToViewMode (url) {
   const urlHasEditOrBoth = /\?edit|\?both/
   if (urlHasEditOrBoth.test(url)) {
     const newUrl = url.toString().replace(urlHasEditOrBoth, '?view')
@@ -549,26 +564,35 @@ function allowVisibleSource (isLogin, permission) {
 }
 
 function disableControls () {
-  ui.toolbar.edit.attr({
-    disabled: 'true'
-  })
-  ui.toolbar.both.attr({
-    disabled: 'true'
-  })
+  for (const key of Object.keys(modeChangeControls)) {
+    modeChangeControls[key].attr({
+      disabled: 'disabled'
+    })
+  }
+  for (const key of Object.keys(exportImportControls)) {
+    exportImportControls[key].attr({
+      disabled: 'disabled'
+    })
+    exportImportControls[key].parent().css('cursor', 'not-allowed')
+  }
 }
 
 function enableControls () {
-  ui.toolbar.edit.removeAttr('disabled')
-  ui.toolbar.both.removeAttr('disabled')
+  for (const key of Object.keys(modeChangeControls)) {
+    modeChangeControls[key].removeAttr('disable')
+  }
+  for (const key of Object.keys(exportImportControls)) {
+    exportImportControls[key].removeAttr('disable')
+  }
 }
 
 function userIsLogin (userPersonalInfo) {
-  if (Object.prototype.hasOwnProperty.call(userPersonalInfo, 'login')) {
-    if (userPersonalInfo.login === true) {
-      return true
-    }
-  }
-  return false
+  return !!userPersonalInfo && !!userPersonalInfo.login
+}
+
+function isAllowUserChangeMode () {
+  const isOwner = personalInfo.userid && window.owner && personalInfo.userid === window.owner
+  return isOwner || !blockSourceView
 }
 
 setupSyncAreas(ui.area.codemirrorScroll, ui.area.view, ui.area.markdown, editor)
@@ -1639,15 +1663,11 @@ function importFromUrl (url) {
 
 // mode
 ui.toolbar.mode.click(function () {
-  if (personalInfo.userid && window.owner && personalInfo.userid === window.owner) { toggleMode() } else if (blockSourceView) return
-  toggleMode()
+  if (isAllowUserChangeMode()) { return toggleMode() }
 })
 // edit
 ui.toolbar.edit.click(function () {
-  if (personalInfo.userid && window.owner && personalInfo.userid === window.owner) {
-    changeMode(modeType.edit)
-  } else if (blockSourceView) return
-  changeMode(modeType.edit)
+  if (isAllowUserChangeMode()) { return changeMode(modeType.edit) }
 })
 // view
 ui.toolbar.view.click(function () {
@@ -1655,10 +1675,7 @@ ui.toolbar.view.click(function () {
 })
 // both
 ui.toolbar.both.click(function () {
-  if (personalInfo.userid && window.owner && personalInfo.userid === window.owner) {
-    changeMode(modeType.edit)
-  } else if (blockSourceView) return
-  changeMode(modeType.both)
+  if (isAllowUserChangeMode()) { return changeMode(modeType.both) }
 })
 
 ui.toolbar.night.click(function () {
@@ -1731,27 +1748,27 @@ function updatePermission (newPermission) {
   switch (permission) {
     case 'freely':
       label = '<i class="fa fa-leaf"></i> Freely'
-      title = 'Anyone can edit'
+      title = 'Кожен може редагувати'
       break
     case 'editable':
       label = '<i class="fa fa-shield"></i> Editable'
-      title = 'Signed people can edit'
+      title = 'Люди, які ввійшли в систему, можуть редагувати'
       break
     case 'limited':
       label = '<i class="fa fa-id-card"></i> Limited'
-      title = 'Signed people can edit (forbid guest)'
+      title = 'Люди, які ввійшли в систему, можуть редагувати (заборонити гостям)'
       break
     case 'locked':
       label = '<i class="fa fa-lock"></i> Locked'
-      title = 'Only owner can edit'
+      title = 'Редагувати може лише власник'
       break
     case 'protected':
       label = '<i class="fa fa-umbrella"></i> Protected'
-      title = 'Only owner can edit (forbid guest)'
+      title = 'Редагувати може лише власник (заборонити гостям)'
       break
     case 'private':
       label = '<i class="fa fa-hand-stop-o"></i> Private'
-      title = 'Only owner can view & edit'
+      title = 'Лише власник може переглядати та редагувати'
       break
   }
   if (personalInfo.userid && window.owner && personalInfo.userid === window.owner) {
@@ -2130,12 +2147,12 @@ socket.on('refresh', function (data) {
   // run allowVisibleSource functionality
   if (ui.toolbar.edit.data('blockSource')) {
     try {
-      checkParametr(userIsLogin(personalInfo), currentPermission)
+      checkParameter(userIsLogin(personalInfo), currentPermission)
     } catch (error) {
       console.log(error)
     }
   }
-  if (ui.toolbar.edit.data('blockSource') && blockSourceView) { replaceUrl(window.location.href) }
+  if (ui.toolbar.edit.data('blockSource') && blockSourceView) { replaceUrlToViewMode(window.location.href) }
   if (!window.loaded) {
     // auto change mode if no content detected
     var nocontent = editor.getValue().length <= 0
